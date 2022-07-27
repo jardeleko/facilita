@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   },
   price:{
     fontSize: 12,
+    color: '#4f4a4a',
     fontFamily: 'Montserrat_700Bold'
   }
 });

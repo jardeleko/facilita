@@ -43,7 +43,8 @@ export default function SwiperComponent({images}) {
 
 const styles = StyleSheet.create({
   wrapper:{
-
+    objectFit: 'cover',
+    overflow: 'hidden'
   },
   slide:{
     flex:1,

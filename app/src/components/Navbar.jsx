@@ -8,7 +8,12 @@ export default function CustomNavigationBar({navigation, back}) {
     const closeMenu = () => setVisible(false)
     return (
         <Appbar.Header style={styles.container}>
-            {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+            {back ? 
+            <Appbar.BackAction onPress={navigation.goBack} 
+                anchor={
+                    <Appbar.Action icon="menu" color='black' onPress={openMenu} />
+                }
+            /> : null}
             <Appbar.Content title="Facilita Imóveis" style={styles.title}/>
             {!back ? (
                 <Menu style={styles.menu}
@@ -18,9 +23,12 @@ export default function CustomNavigationBar({navigation, back}) {
                         <Appbar.Action icon="menu" color='black' onPress={openMenu} />
                     }>
                         <Menu.Item onPress={() => {navigation.navigate('create'), setVisible(false)}} icon="briefcase-plus-outline" title="Anunciar"/>
-                        <Menu.Item onPress={() => {console.log('Option 2 pressed')}} icon="calendar-clock-outline" title="Diárias"/>
-                        <Menu.Item onPress={() => {console.log('Option 3 pressed')}} icon="home-city-outline" title="Mensal"/>
-                        <Menu.Item onPress={() => {console.log('Option 2 was pressed ;) morça')}} icon="account-arrow-right-outline" title="Sair"/>
+                        <Menu.Item onPress={() => {navigation.navigate('diarias'), setVisible(false)}} icon="calendar-clock-outline" title="Diárias"/>
+                        <Menu.Item onPress={() => {navigation.navigate('mensal'), setVisible(false)}} icon="home-city-outline" title="Mensal"/>
+                        <Menu.Item onPress={() => {console.log('Option 3 pressed')}} icon="paperclip" title="Seus Anuncios"/>
+                        <Menu.Item onPress={() => {navigation.navigate('login'), setVisible(false)}} icon="account-arrow-right-outline" title="Login"/>
+                        <Menu.Item onPress={() => {navigation.navigate('register'), setVisible(false)}} icon="account-plus-outline" title="Registro"/>
+
                 </Menu>
             ) : null}
         </Appbar.Header>

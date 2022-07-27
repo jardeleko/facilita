@@ -52,7 +52,10 @@ export default function Detail(id) {
         R$ {house.offer > 0 ? ((parseFloat(house.price) - (parseFloat(house.price)*(house.offer/100))).toFixed(2)).replace('.', ',') : parseFloat(house.price).toFixed(2).replace('.', ',')}
       </Text>
       <Text style={styles.description}>
-      {house.desc}
+        {house.desc}
+      </Text>
+      <Text style={styles.region}>
+        {house.bairro}
       </Text>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{paddingHorizontal: 15, marginTop: 35 }}>
@@ -119,6 +122,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_500Medium',
     paddingHorizontal: 20,
     color: '#b3aeae',
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 20,
+  },
+  region:{
+    fontFamily: 'Montserrat_500Medium',
+    paddingHorizontal: 20,
+    color: 'black',
     fontSize: 14,
     lineHeight: 20,
     marginTop: 20,

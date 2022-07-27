@@ -31,8 +31,8 @@ export default function New({data}) {
           <Text style={styles.price}>R$ {data.offer > 0 ? ((parseFloat(data.price) - (parseFloat(data.price)*(data.offer/100))).toFixed(2)).replace('.', ',') : data.price}</Text>
         </View>
         <TouchableOpacity onPress={() => history.navigate('detail', {id: data._id})}>
-          <View style={{width: '100%'}}>
-            <Ionicons name="ios-add-circle" size={24} color="black" />
+          <View style={{width: '100%', marginLeft:10}}>
+            <Ionicons name="ios-add-circle" size={24} color="#23bde8" />
           </View>
         </TouchableOpacity>
       </View>
@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   content:{
    flexDirection: 'row',
    alignItems: 'center',
-
    marginVertical: 10, 
   },
   title:{
@@ -92,6 +91,7 @@ const styles = StyleSheet.create({
   },
   price:{
     fontSize: 15,
+    color: '#4f4a4a',
     fontFamily: 'Montserrat_700Bold'
   }
 });

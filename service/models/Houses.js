@@ -28,6 +28,10 @@ const houseSchema = new mongoose.Schema(
         temp: {
             type: Boolean,
             default: false
+        },
+        userId: {
+            type: String,
+            required: true
         }
     }, 
     {timestamps:true}

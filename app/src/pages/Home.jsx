@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, FlatList} from 'react-native'
+import React, { 
+  useEffect, 
+  useState,
+ } from 'react'
+import { View, Text, StyleSheet, FlatList, RefreshControl} from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import {Feather} from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -37,16 +40,6 @@ export default function Home() {
     showsVerticalScrollIndicator={false}
     style={{backgroundColor: '#FFF' }}
   >
-    <View style={styles.header}>
-      <View style={styles.inputArea}>
-        <Feather name="search" size={24} color="black" />
-        <TextInput
-        placeholder="O que está procurando?"
-        style={styles.input}
-        />
-      </View>
-    </View>
-
     <View style={styles.contentNew}>
       <Text style={styles.title}>Novidades</Text>
     </View>
@@ -56,7 +49,6 @@ export default function Home() {
         <FlatList 
           style={{overflow: 'visible'}}
           data={datalist}
-          // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           nestedScrollEnabled={true}
           keyExtractor={(item) => String(item._id)}
           horizontal
@@ -139,6 +131,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title:{
+    marginTop: 20,
     paddingHorizontal: 15,
     fontFamily: 'Montserrat_700Bold',
     fontSize: 18,
