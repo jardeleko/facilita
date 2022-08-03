@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const Houses = require('../models/Houses')
-const  {verifyToken, verifyTokenAuth} = require('./verifyToken')
+const  {verifyTokenAuthPut, verifyTokenAuth} = require('./verifyToken')
 
 router.get("/find", async (req, res) => {
     await Houses.find().sort({createdAt:-1}).then((dados) => {
@@ -40,18 +40,17 @@ router.post("/", async (req, res) => {
     }
 })
 
-//Delete Like true
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenAuthPut, async (req, res) => {
     await Houses.findByIdAndUpdate(req.params.id, { $set: req.body }, {new:true}).then((UpdateHouse) => {
         res.status(200).json(UpdateHouse)
     }).catch((err) => {
+        console.log(err)
         res.status(500).json(err)
     })
 })
 
 //Delete Like true
-router.delete("/:id", verifyTokenAuth, async (req, res) => {
-    const id = req.params.id
+router.delete("/:id", async (req, res) => {
     try {
         const house = await Houses.findByIdAndDelete(req.params.id)
         res.status(200).json(house)

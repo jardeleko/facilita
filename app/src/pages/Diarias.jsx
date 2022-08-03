@@ -17,7 +17,6 @@ import { useNavigation } from '@react-navigation/native'
 import publicRequest from '../requestMethods'
 import DiariasComponent from '../components/DiariasComponent'
 
-
 export default function Diarias() {
   const [tmplist, setFilter] = useState([])
   const [masterData, masterTemp] = useState([])
@@ -128,4 +127,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#4f4a4a'
   }
-});
+})

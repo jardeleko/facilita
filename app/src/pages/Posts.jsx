@@ -2,28 +2,34 @@ import React, {
     useEffect, 
     useState,
   } from 'react'
-  import { 
+import { 
     View, 
     Text, 
     StyleSheet, 
     FlatList, 
-  } from 'react-native'
-  import { 
+} from 'react-native'
+import { 
     ScrollView, 
     TextInput 
-  } from 'react-native-gesture-handler'
-  import {Feather} from '@expo/vector-icons'
-  import { useNavigation } from '@react-navigation/native'
-  import publicRequest from '../requestMethods'
-  import DiariasComponent from '../components/DiariasComponent'
-  
-  
+} from 'react-native-gesture-handler'
+import {Feather} from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import DiariasComponent from '../components/DiariasComponent'
+import { useSelector } from 'react-redux'
+import axios from 'axios'
+
   export default function Diarias() {
     const [tmplist, setFilter] = useState([])
     const [masterData, masterTemp] = useState([])
     const [search, setSearch] = useState('')
+    const currentUser = useSelector((state) => state.currentUser)
     const navigation = useNavigation()
-  
+    
+    const BASE_URL = 'http://192.168.0.243:5000/api'
+    const userRequest = axios.create({
+        baseURL: BASE_URL,
+        headers: {token: `Bearer ${currentUser.accessTk}`}
+    })
     const searchFilter = (text) => {
       if(text) {
         const newData = masterData.filter((item) => {
@@ -41,16 +47,15 @@ import React, {
   
     useEffect(() => {
       const getItems = async() =>{
-        await publicRequest.get('/house/find').then((res) => {
-          const responseTemp = res.data?.filter((items) => items.temp)
-          setFilter(responseTemp)
-          masterTemp(responseTemp)
+        await userRequest.get(`/house/getpost/${currentUser._id}`).then((res) => {
+          setFilter(res.data)
+          masterTemp(res.data)
         }).catch((err) => {
           console.log(err)
         })
       }
       getItems()
-    },[])
+    },[currentUser])
   
   
    return (
@@ -91,41 +96,41 @@ import React, {
     );
   }
   
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     header:{
-     paddingHorizontal: 10,
-     flexDirection: 'column',
-     alignItems: 'center',
-     justifyContent: 'center',
-     width: '100%',
-     marginVertical: 20, 
+        paddingHorizontal: 10,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        marginVertical: 20, 
     },
     inputArea:{
-      paddingHorizontal: 15,
-      flexDirection: 'row',
-      alignItems: 'center',
-      width: '98%',
-      backgroundColor:  '#FFF',
-      elevation: 2,
-      paddingHorizontal: 10,
-      height: 37,
-      borderRadius: 10,
+        paddingHorizontal: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '98%',
+        backgroundColor:  '#FFF',
+        elevation: 2,
+        paddingHorizontal: 10,
+        height: 37,
+        borderRadius: 10,
     },
     input:{
-      fontFamily: 'Montserrat_500Medium',
-      paddingHorizontal: 10,
-      fontSize: 13,
-      width: '90%'
+        fontFamily: 'Montserrat_500Medium',
+        paddingHorizontal: 10,
+        fontSize: 13,
+        width: '90%'
     },
     contentNew:{
-      flexDirection: 'row',
-      width: '100%',
-      alignItems: 'center'
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'center'
     },
     title:{
-      paddingHorizontal: 15,
-      fontFamily: 'Montserrat_700Bold',
-      fontSize: 18,
-      color: '#4f4a4a'
+        paddingHorizontal: 15,
+        fontFamily: 'Montserrat_700Bold',
+        fontSize: 18,
+        color: '#4f4a4a'
     }
-  });
+})

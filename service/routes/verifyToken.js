@@ -28,4 +28,16 @@ const verifyTokenAuth = async (req, res, next) => {
     })
 }
 
-module.exports = {verifyToken, verifyTokenAuth}
+const verifyTokenAuthPut = async (req, res, next) => {
+    const id = req.body.userId
+    await User.findById(id).then(() => {
+        verifyToken(req, res, () => {
+            next()
+        })
+    }).catch((err) => {
+        res.status(403).json("User not exists!")
+    })
+}
+
+
+module.exports = {verifyToken, verifyTokenAuth, verifyTokenAuthPut}

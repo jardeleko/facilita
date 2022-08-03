@@ -1,9 +1,12 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Appbar, Menu } from 'react-native-paper'
+import { logOut } from '../redux/userRedux'
+import { useDispatch } from 'react-redux'
 
 export default function CustomNavigationBar({navigation, back}) {
     const [visible, setVisible] = React.useState(false)
+    const dispatch = useDispatch()
     const openMenu = () => setVisible(true)
     const closeMenu = () => setVisible(false)
     return (
@@ -25,10 +28,9 @@ export default function CustomNavigationBar({navigation, back}) {
                         <Menu.Item onPress={() => {navigation.navigate('create'), setVisible(false)}} icon="briefcase-plus-outline" title="Anunciar"/>
                         <Menu.Item onPress={() => {navigation.navigate('diarias'), setVisible(false)}} icon="calendar-clock-outline" title="Diárias"/>
                         <Menu.Item onPress={() => {navigation.navigate('mensal'), setVisible(false)}} icon="home-city-outline" title="Mensal"/>
-                        <Menu.Item onPress={() => {console.log('Option 3 pressed')}} icon="paperclip" title="Seus Anuncios"/>
-                        <Menu.Item onPress={() => {navigation.navigate('login'), setVisible(false)}} icon="account-arrow-right-outline" title="Login"/>
-                        <Menu.Item onPress={() => {navigation.navigate('register'), setVisible(false)}} icon="account-plus-outline" title="Registro"/>
-
+                        <Menu.Item onPress={() => {navigation.navigate('posts'), setVisible(false)}} icon="paperclip" title="Seus Anuncios"/>
+                        <Menu.Item onPress={() => {navigation.navigate('list'), setVisible(false)}} icon="message-outline" title="Mensagens"/>
+                        <Menu.Item onPress={() => {dispatch(logOut()), setVisible(false)}} icon="account-arrow-right-outline" title="Sair"/>
                 </Menu>
             ) : null}
         </Appbar.Header>

@@ -23,8 +23,11 @@ router.post("/register", async (req, res) => {
 })
 
 router.post("/login", async (req, res) => {
-    await User.findOne({username:req.body.username}).then((user) => {
+    console.log(req.body)
+    await User.findOne({user: req.body.user}).then((user) => {
         const hashPassw = CryptoJS.AES.decrypt(user.passwd, process.env.PASS_SECRET)
+        console.log(hashPassw)
+        
         const passw = hashPassw.toString(CryptoJS.enc.Utf8)
         const confirm = req.body.passwd
         if(passw == confirm){
@@ -32,7 +35,7 @@ router.post("/login", async (req, res) => {
                 id: user._id, 
             }, 
             process.env.JWT_SECRET,
-            {expiresIn:'1d'}
+            {expiresIn:'365d'}
             )
             const {password, ...others} = user._doc
             res.status(200).json({...others, accessTk})

@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import {Feather, Ionicons} from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
-import Stars from 'react-native-stars';
-import SwiperComponent from '../components/Swiper';
-import publicRequest from '../requestMethods';
+import React, { useEffect, useState } from 'react'
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+import SwiperComponent from '../components/Swiper'
+import publicRequest from '../requestMethods'
+import { useSelector } from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
 
 export default function Detail(id) {
+  const userId = useSelector((state) => state.currentUser._id)
   const newGet = JSON.parse(JSON.stringify(id.route.params)).id
   const [house, setHouse] = useState({})
   const [offer, setOffer] = useState(0)
   const [images, setImages] = useState([])
+  const [isPublisher, setPublisher] = useState(false)
+  const navigation = useNavigation()
   useEffect(() => {
     const getHouse = async () => {
       await publicRequest.get(`/house/find/${newGet}`).then((house) => {
+        if(house.data.userId == userId){
+          setPublisher(true)
+        }
         setHouse(house.data)
         setOffer(house.data.offer)
         const tmp = house.data.imgs?.filter((img) => img)
@@ -23,7 +29,7 @@ export default function Detail(id) {
       })
     } 
     getHouse()
-  },[newGet])
+  },[newGet, userId])
 
   return (
     <ScrollView 
@@ -47,10 +53,21 @@ export default function Detail(id) {
           </View>
         }
       </View>
-
-      <Text style={styles.price}>
-        R$ {house.offer > 0 ? ((parseFloat(house.price) - (parseFloat(house.price)*(house.offer/100))).toFixed(2)).replace('.', ',') : parseFloat(house.price).toFixed(2).replace('.', ',')}
-      </Text>
+      <View style={styles.viewBox}>
+        <Text style={styles.price}>
+          R$ {house.offer > 0 ? ((parseFloat(house.price) - (parseFloat(house.price)*(house.offer/100))).toFixed(2)).replace('.', ',') : parseFloat(house.price).toFixed(2).replace('.', ',')}
+        </Text>
+        {isPublisher 
+          ? 
+            <TouchableOpacity onPress={() => navigation.navigate('edit', {data: house})}>
+              <Text style={styles.edit}>Editar</Text>
+            </TouchableOpacity>
+          :
+            <TouchableOpacity onPress={() => navigation.navigate('chat', {data: house})}>
+              <Text style={styles.editChat}>Entrar em contato</Text>
+            </TouchableOpacity>
+        }
+      </View>
       <Text style={styles.description}>
         {house.desc}
       </Text>
@@ -112,6 +129,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat_700Bold', 
     fontSize: 10
   },
+  viewBox: {
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },  
   price:{
     paddingHorizontal: 20,
     fontFamily: 'Montserrat_700Bold',
@@ -142,5 +163,21 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 8,
     marginRight: 20,
+  },
+  edit: {
+    padding: 5,
+    height: 30,
+    marginRight: 10,
+    color: 'white',
+    borderRadius: 4,
+    backgroundColor: 'darkblue'
+  },
+  editChat: {
+    padding: 5,
+    height: 30,
+    marginRight: 10,
+    color: 'white',
+    borderRadius: 4,
+    backgroundColor: 'green'
   }
 });

@@ -1,7 +1,7 @@
 import publicRequest from '../requestMethods'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-
+import {Feather} from '@expo/vector-icons'
 import { 
     View,
     Text,
@@ -25,8 +25,7 @@ export default function Register() {
   const submitForm = async () => {
     const body = {name, user, email, age, passwd, city}
     await publicRequest.post('/register', body).then((res) => {
-      console.log(res.data)
-      Alert.alert('usuario' + user.user + 'criado com sucesso!')
+      Alert.alert('Cliente ' + res.data.name + ' criado com sucesso!')
       navigation.navigate('login')
     }).catch((err) =>{
       console.log(err)
@@ -78,15 +77,18 @@ export default function Register() {
             placeholder="Pass: ASD!@#123"
             placeholderTextColor="gray" 
           />
-          <TextInput
-            style={styles.input}
-            onChangeText={setCity}
-            placeholder="Cidade: Rosul, RS"
-            placeholderTextColor="gray" 
-          />
-          <TouchableOpacity style={styles.buttonCreate} onPress={submitForm}>
-              <Text style={styles.buttonResize}> Criar </Text>
-          </TouchableOpacity>
+  
+          <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+            <TextInput
+              style={styles.input}
+              placeholder="Cidade: Rosul, RS"
+              placeholderTextColor="gray" 
+              onChangeText={setCity}
+              />
+            <TouchableOpacity onPress={submitForm} style={styles.buttonBG}>
+              <Feather name='send' size={26} color='white'/>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
       </View>
     </ScrollView>
@@ -101,11 +103,11 @@ const styles = StyleSheet.create({
       backgroundColor: '#ffcc64',
     },  
     container: {
-      borderWidth: 20,
-      borderColor: '#232323',
-      opacity: 0.9,
-      borderRadius: 15,
-      backgroundColor: '#232323',
+      borderWidth: 1,
+      borderColor: 'black',
+      opacity: 1,
+      borderRadius: 2,
+      backgroundColor: 'black',
     },
     title: {
       marginTop: 10,
@@ -124,34 +126,15 @@ const styles = StyleSheet.create({
         borderTopColor: 'transparent',
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
-        borderBottomColor: 'gray'
+        borderBottomColor: '#ffcc64'
   },
-  buttonCreate: {
-    marginTop:30,
-  },
-  buttonResize: {
-    padding: 8,
-    borderRadius: 8,
-    textAlign: 'center',
-    fontSize: 16,
-    color:'black',
-    backgroundColor: '#ff8936',
-  },
-  safeImageload: {
-    display: 'flex', 
-    flexDirection:'row', 
-    justifyContent:'space-between', 
-    marginTop: 10, 
-    marginLeft:8,
-    marginRight: 5,
-    marginBottom: 20
-  },
-  sendBtn: {
-    width: 70,
-    height: 30,
-    borderRadius: 4,
-    backgroundColor: 'darkblue',
-    justifyContent: 'center',
-    alignItems: 'center',
+  buttonBG: {
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor: '#dadada',
+    opacity: 0.5,
+    margin:14, 
+    padding:10, 
+    borderRadius:30
   }
 });

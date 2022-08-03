@@ -1,10 +1,9 @@
 import { Picker } from '@react-native-picker/picker'
-import publicRequest from '../requestMethods'
 import { firebase } from '../../firebase'
+import publicRequest from '../requestMethods'
 import * as ImagePicker from 'expo-image-picker'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-
 import { 
     View,
     Text,
@@ -13,20 +12,51 @@ import {
     TextInput, 
     TouchableOpacity,
     Image,
-    Alert
+    Alert,
+    ScrollView,
+    RefreshControl
 } from "react-native"
+import { useSelector } from 'react-redux'
 
-export default function Create() {
-  const [name, setName] = useState('')
-  const [desc, setDesc] = useState('')
-  const [region, setRegion] = useState('')
-  const [price, setPrice] = useState('')
-  const [offer, setOFF] = useState(0)
+export default function Edit(data) {
+  const currentUser = useSelector((state)=> state.currentUser)
+  const userId = currentUser ? currentUser._id : null
+  const [refreshing, setRefreshing] = useState(false)
   const [temp, setSelectedValue] = useState(false)
   const [uploading, setChange] = useState(false)
   const [img, setImg] = useState(null)
   const [images, setImages] = useState([])
+  const [inputs, setInputs] = useState({})
   const history = useNavigation()
+  const [control, setControl] = useState(false)
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000);
+  }, []);
+
+  const createTwoButtonAlert = (index) =>{
+    Alert.alert(
+    "Apagar imagem",
+    `de número ${index+1}`,
+    [
+      {
+        text: "Cancelar",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+      { 
+        text: "OK", onPress: () => {
+          images.splice(index, 1)
+          setImages(images)
+          onRefresh()
+          setControl(true)          
+        }
+      }
+    ])
+  }
 
   const pickImage = async () => {
     try {
@@ -38,7 +68,6 @@ export default function Create() {
       });
       if (!result.cancelled) {
         const source = {uri: result.uri}
-        console.log(source)
         setImg(source)
       }
     } catch {
@@ -55,8 +84,9 @@ export default function Create() {
     try {
       await ref.then((res) => {
         res.ref.getDownloadURL().then((url) => {
-          setImages(old => [...old, url])
-          history.navigate('/')
+        setImages(old => [...old, url])
+        setControl(true)          
+        history.navigate(0)
         })
       })
     } catch (error) {
@@ -68,86 +98,124 @@ export default function Create() {
   }
   
   const submitForm = async () => {
-    const body = {name, desc, imgs:images, bairro:region, price, offer, temp}
+    const body = {userId, ...inputs, imgs:images, temp}
     await publicRequest.post('house', body).then((res) => {
       alert('Os dados foram enviados!')
+      history.navigate('home')
     }).catch((err) => {
       console.log(err)
     })
   }
 
-  return (<>
-    <View style={styles.wrapper}>
-      <SafeAreaView style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder="Nome: Casa Florianópolis"
-          placeholderTextColor="gray" 
-          onChangeText={setName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Descrição: O imóvel possui 4 quartos..."
-          placeholderTextColor="gray" 
-          onChangeText={setDesc}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Bairro"
-          placeholderTextColor="gray" 
-          onChangeText={setRegion}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setPrice}
-          placeholder="Valor"
-          placeholderTextColor="gray" 
-        />
-        <View style={styles.boxSelection}>
-          <Picker
-            selectedValue={temp}
-            style={{ height: 50, width: 150, color:'gray'}}
-            onValueChange={(itemValue) => setSelectedValue(itemValue)}
-          >
-            <Picker.Item label="Tipo" selectedValue/>
-            <Picker.Item label="Dia" value={true} />
-            <Picker.Item label="Mes" value={false} />
-          </Picker>
-          <Text style={styles.editText}>Desconto(%): </Text>
-          <TextInput
-            style={styles.miniBox}
-            keyboardType="number-pad"
-            onChangeText={setOFF}
-            placeholder="20"
+  return (
+    <ScrollView 
+      showsVerticalScrollIndicator={false}
+      style={{backgroundColor: '#FFF' }}
+    >
+    <Text style={{fontSize:14, fontFamily:'Montserrat_500Medium', textAlign: 'center', marginTop: 14}}>Crie seu Anúncio</Text>
+        <View style={styles.wrapper}>
+        <SafeAreaView style={styles.container}>
+            <TextInput
+            style={styles.input}
+            placeholder='Nome: Casa em Florianópolis'
             placeholderTextColor="gray" 
-          />
-        </View>   
-        
-        <SafeAreaView style={styles.safeImageload}>
-          <TouchableOpacity onPress={pickImage}>
-            <Image 
-              source={{uri: "https://cdn-icons-png.flaticon.com/128/126/126494.png"}}
-              style={{width:40, height:40}}
+            onChangeText={(text) => setInputs({...inputs, name: text})}
             />
-          </TouchableOpacity>
-          
-          <View style={styles.imageContainer}> 
-            {img && <Image source={{uri: img.uri}} style={styles.positionImg}/>}
-          </View>
+            <TextInput
+            style={styles.input}
+            placeholder='Descrição: Possui 4 quartos...'
+            placeholderTextColor="gray" 
+            onChangeText={(text) => setInputs({...inputs, desc: text})}
+            />
+            <TextInput
+            style={styles.input}
+            placeholder='Cidade, Bairro, UF'
+            placeholderTextColor="gray" 
+            onChangeText={(text) => setInputs({...inputs, bairro: text})}
+            />
+            <TextInput
+            style={styles.input}
+            onChangeText={(text) => setInputs({...inputs, price: text})}
+            placeholder='500,00 / 500.00'
+            placeholderTextColor="gray" 
+            />
+            <View style={styles.boxSelection}>
+              <Picker
+                selectedValue={temp}
+                style={{ height: 50, width: 150, color:'gray'}}
+                onValueChange={(itemValue) => setSelectedValue(itemValue)}
+              >
+                <Picker.Item label="Tipo" selectedValue/>
+                <Picker.Item label="Dia" value={true} />
+                <Picker.Item label="Mes" value={false} />
+              </Picker>
+             
+              <Text style={styles.editText}>Desconto(%): </Text>
+              <TextInput
+                style={styles.miniBox}
+                keyboardType="number-pad"
+                onChangeText={(text) => setInputs({...inputs, offer: parseInt(text)})}
+                placeholder="0 <> 100"
+                placeholderTextColor="gray" 
+              />
+            </View>   
 
-          <TouchableOpacity style={styles.sendBtn} onPress={uploadImage}> 
-            <Text style={styles.buttonText}>Upload</Text>
-          </TouchableOpacity>
+            {uploading 
+              ? <Image 
+                  resizeMode='center'
+                  style={{width:100, height:100, marginLeft:'30%'}}
+                  source={require('../../assets/loader.gif')}
+                />
+              : null
+            }
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              style={{paddingHorizontal: 15, 
+              marginTop: 35 }}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
+            {images?.map((img, index) => (
+            <TouchableOpacity onLongPress={() =>  createTwoButtonAlert(index)}>
+              <View style={styles.slide}>
+                  <Image
+                  source={{uri: img}}
+                  style={{width: 90, height: 90, borderRadius: 8}}
+                  />
+              </View>
+            </TouchableOpacity>
+            ))}
+            </ScrollView>
 
+
+            <SafeAreaView style={styles.safeImageload}>
+
+              <TouchableOpacity onPress={pickImage}> 
+                  <Image 
+                  source={{uri: "https://cdn-icons-png.flaticon.com/128/126/126494.png"}}
+                  style={{width:40, height:40}}
+                  />
+              </TouchableOpacity>
+              
+              <View style={styles.imageContainer}> 
+                  {img && <Image source={{uri: img.uri}} style={styles.positionImg}/>}
+              </View>
+
+              <TouchableOpacity style={styles.sendBtn} onPress={uploadImage}> 
+                <Text style={styles.buttonText}>Upload</Text>
+              </TouchableOpacity>
+
+            </SafeAreaView>
+
+
+            <TouchableOpacity style={styles.buttonCreate} onPress={submitForm}>
+                <Text style={styles.buttonResize}> Adicionar </Text>
+            </TouchableOpacity>
+        
         </SafeAreaView>
-
-        <View style={styles.buttonCreate}>
-            <Text style={styles.buttonResize} onPress={submitForm}> Adicionar </Text>
         </View>
-       
-      </SafeAreaView>
-    </View>
-    </>)
+    </ScrollView>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -224,5 +292,15 @@ const styles = StyleSheet.create({
   positionImg: {
     width:50, 
     height:50,
-  }
+  },
+  slide:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFF',
+    height: 90,
+    height: 90,
+    borderRadius: 8,
+    marginRight: 20,
+  },
 });
+  

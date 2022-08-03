@@ -1,21 +1,35 @@
 import React, { 
   useEffect, 
   useState,
+  useCallback
  } from 'react'
-import { View, Text, StyleSheet, FlatList, RefreshControl} from 'react-native'
-import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import {Feather} from '@expo/vector-icons'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  FlatList, 
+  RefreshControl
+} from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
 import New from '../components/New'
 import House from '../components/House'
 import Recommended from '../components/Recommended'
 import publicRequest from '../requestMethods'
 
-
 export default function Home() {
+  const [refreshing, setRefreshing] = useState(false)
   const [datalist, setData] = useState([])
   const [tmplist, setTemp] = useState([])
   const [offerlist, setOffer] = useState([])
+  const navigation = useNavigation()
+  
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1500);
+  }, []);
   
   useEffect(() => {
     const getItems = async() =>{
@@ -30,15 +44,15 @@ export default function Home() {
         console.log(err)
       })
     }
-    getItems()
+    getItems() 
   },[])
 
-  const navigation = useNavigation();
 
  return (
   <ScrollView 
     showsVerticalScrollIndicator={false}
     style={{backgroundColor: '#FFF' }}
+    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
   >
     <View style={styles.contentNew}>
       <Text style={styles.title}>Novidades</Text>
@@ -67,7 +81,6 @@ export default function Home() {
         <FlatList 
           style={{overflow: 'visible'}}
           data={tmplist}
-          // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           nestedScrollEnabled={true}
           keyExtractor={(item) => String(item._id)}
           horizontal
@@ -86,7 +99,6 @@ export default function Home() {
         <FlatList 
           style={{overflow: 'visible'}}
           data={offerlist}
-          // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           nestedScrollEnabled={true}
           keyExtractor={(item) => String(item._id)}
           horizontal

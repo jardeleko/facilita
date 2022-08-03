@@ -5,63 +5,69 @@ import {
     TouchableOpacity,   
     TextInput,
     Alert,
+    ImageBackground
 } from 'react-native'
 import React, { useState } from 'react'
-import publicRequest from '../requestMethods'
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch } from 'react-redux'
+import { login } from '../redux/apiCalls'
 
 export default function Login() {
+
     const [user, setUser] = useState('')
     const [passwd, setPasswd] = useState('')
-    const [currentUser, setCurrentUser] = useState({})
+    const dispatch = useDispatch()
     const navigation = useNavigation()
-    //history.navigate('detail', {id: data._id})}
-    console.log(currentUser)
 
     const submitForm = async () => {
-        const query = {user, passwd}
-        publicRequest.post('/login', query).then((res) => {
-            setCurrentUser(res.data)
-            Alert.alert('Bem vindo, '+res.data.name)
-            navigation.navigate('home', {data: res.data})
-        }).catch((err) => {
-            Alert.alert('Credenciais erradas!')
-            console.log(err)
-        })
+        login(dispatch, {user, passwd})
     }
-
+    const createRequest = () => {
+        navigation.navigate('register')
+    }
     return (
     <View style={styles.container}>
-        <Text style={styles.title}>Facilita Imóveis</Text>
-            <View style={styles.boxLogin}>
-                <View style={{display:'flex', flexDirection:'row', justifyContent: 'space-between'}}>
-                    <Text style={{color:'white', marginTop:15}}>Username: </Text>
-                    <TextInput 
-                        style={styles.input}
-                        onChangeText={setUser}
-                        placeholder="exemple_apelido12"
-                        placeholderTextColor="gray" 
-                    />
-                </View>
-        
-                <View style={{display:'flex', flexDirection:'row', justifyContent: 'space-between'}}>
-
-                    <Text style={{color:'white', marginTop:15, marginRight: 30}}>Senha: </Text>
-                    <TextInput 
-                        style={styles.input} 
-                        onChangeText={setPasswd}
-                        secureTextEntry={true}
-                        placeholder="ASD!@#123"
-                        placeholderTextColor="gray"    
-                    />
-                </View>
-                <TouchableOpacity style={{alignItems:'center', justifyContent:'center'}} onPress={submitForm}>
-                    <Text style={styles.sendBtn}>Entrar</Text>
-                </TouchableOpacity>
+        <ImageBackground 
+            resizeMode='center'
+            style={{marginBottom: 300, padding:20}}
+            source={{uri:'https://cdn-icons-png.flaticon.com/512/33/33248.png'}}
+        >
+        <View style={styles.boxLogin}>
+            <View style={{display:'flex', flexDirection:'row', justifyContent: 'space-between'}}>
+                <Text style={{color:'white', marginTop:15}}>Username: </Text>
+                <TextInput 
+                    style={styles.input}
+                    onChangeText={setUser}
+                    placeholder="Digite seu user"
+                    placeholderTextColor="gray" 
+                />
             </View>
-            
+    
+            <View style={{display:'flex', flexDirection:'row', justifyContent: 'space-between'}}>
+
+                <Text style={{color:'white', marginTop:15, marginRight: 30}}>Senha: </Text>
+                <TextInput 
+                    style={styles.input} 
+                    onChangeText={setPasswd}
+                    secureTextEntry={true}
+                    placeholder="Digite sua senha"
+                    placeholderTextColor="gray"    
+                />
+            </View>
+            <TouchableOpacity style={{alignItems:'center', justifyContent:'center'}} onPress={submitForm}>
+                <Text style={styles.sendBtn}>Entrar</Text>
+            </TouchableOpacity>
+            <View style={{flexDirection:'row', textAlign:'justify'}}>
+            <Text style={{marginTop:20, color:'white'}}>Ou Cadastre-se agora, </Text>
+            <TouchableOpacity onPress={createRequest}>
+                <Text style={{marginTop:20, color:'#ff8936'}}>clique aqui!</Text>
+            </TouchableOpacity>
+        </View>
+        </View>
+        
+        </ImageBackground>
     </View>
-  )
+    )
 }
 
 const styles = StyleSheet.create({
@@ -72,13 +78,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     boxLogin: {
-        height: 200,
+        marginTop:450,
+        height: 240,
         width: 290,
         margin: 10,
-        opacity: 0.9,
-        backgroundColor: '#343434',
+        opacity: 0.95,
+        borderRadius: 4,
+        backgroundColor: 'black',
         borderWidth: 0.6,
-        borderRadius: 20,
+        
         flexDirection:'column',
         alignItems: 'center',
         justifyContent: 'center',
