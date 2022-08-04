@@ -7,6 +7,7 @@ import {
   Text, 
   StyleSheet, 
   FlatList, 
+  
 } from 'react-native'
 import { 
   ScrollView, 
@@ -53,7 +54,7 @@ export default function Diarias() {
 
 
  return (
-  <ScrollView 
+  <ScrollView vertical={true}
     showsVerticalScrollIndicator={false}
     style={{backgroundColor: '#FFF' }}
   >
@@ -73,19 +74,18 @@ export default function Diarias() {
       <Text style={styles.title}>Imóveis de temporada</Text>
     </View>
 
-    <ScrollView scrollEnabled>
-      <View style={{flexGrow: 1, paddingHorizontal:10}}>
-        <FlatList 
-          style={{overflow: 'visible'}}
-          data={tmplist}
-          nestedScrollEnabled={true}
-          keyExtractor={(item, index) => index.toString()}
-          vertical
-          showsVerticalScrollIndicator={false}
-          renderItem={({item}) => <DiariasComponent data={item} />}
-        />
-      </View>
-    </ScrollView>
+    <View style={{flexGrow: 1, paddingHorizontal:10}}>
+      <FlatList 
+        nestedScrollEnabled={true}
+        style={{overflow: 'visible'}}
+        data={tmplist}
+        keyExtractor={(item, index) => index.toString()}
+        vertical
+ 
+        renderItem={({item}) => <DiariasComponent data={item} />}
+      />
+    </View>
+
   </ScrollView>
   );
 }

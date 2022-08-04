@@ -30,7 +30,7 @@ export default function SwiperComponent({images}) {
       }}
     >
     {images?.map((img) => (
-      <View style={styles.slide} >
+      <View style={styles.slide}>
         <Image
           source={{uri: img}}
           style={styles.imageContainer}

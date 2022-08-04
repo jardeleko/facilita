@@ -11,17 +11,26 @@ const messageSchema = new mongoose.Schema(
             required: true,
         },
         user: {
-            _id:{
+            _id:{ //receive
                 type: String,
                 required: true,
+                immutable: true,
             },
-            name: {
+            idRec:{ //publisher
+                type: String,
+                required: true,
+                immutable: true,
+            },
+            name: { //name publisher
+                type: String,
+                required: true
+            },
+            avatar: {
+                type: String,
+            },
+            idHouse: {
                 type:String,
-                required: true,
-            },
-            idPub: {
-                type: String,
-                required:true
+                required: true
             }
         },
         createdAt: {

@@ -4,17 +4,19 @@ const {verifyToken, verifyTokenAuth} = require('./verifyToken')
 
 //list converses by user
 router.get("/findbyus/:id", async (req, res) => { //user if receive message
-    const id = req.params.id
     await Converse.find().then((converse) => {
-        const filters = converse.map((item) => item.messages)
-        console.log(filters.length)
+        
         let aux = []
         let finaly = []
+        
+        const filters = converse.map((item) => item.messages)
+        
         for(let i = 0; i < filters.length; i++){  
-            console.log(filter[i][0].user._id)
-            if(filters[i][0].user._id == id || filters[i][0].user.isPub == id) aux.push(i)
-        }
-        console.log(aux)
+            console.log(filters[i][0].user._id)
+            if(filters[i][0].user.idRec === req.params.id || filters[i][0].user._id === req.params.id) {
+                aux.push(i) 
+            }
+        }        
         for(let i = 0; i < aux.length; i++){
             finaly.push(converse[aux[i]])
         }

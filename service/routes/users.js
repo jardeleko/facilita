@@ -22,6 +22,14 @@ router.get("/find/:id", async (req, res) => {
     })
 })
 
+router.get("/findname/:id", async (req, res) => {
+    const id = req.params.id
+    await Users.findById(id).then((user) => {
+        res.status(200).json(user.name)
+    }).catch((err) => {
+        res.status(200).json(err)
+    })
+})
 //Delete Like true
 router.put("/:id", async (req, res) => {
     await Users.findByIdAndUpdate(req.params.id, { $set: req.body }, {new:true}).then((updateUser) => {

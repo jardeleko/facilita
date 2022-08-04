@@ -29,10 +29,7 @@ export default function Home() {
     const getData = async () => {
       await publicRequest.get(`/converse/findbyus/${currentUser._id}`).then((response) => {
         const filters = response.data.map((item) => item.messages)
-        console.log('teste')
-        console.log(filters)
         setData(response.data)
-        console.log(response.data)
       }).catch((err) => {
         console.log(err)
       })

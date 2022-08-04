@@ -23,11 +23,13 @@ const conversationSchema = new mongoose.Schema(
             user: {
                 _id:{ //receive
                     type: String,
-                    required: true
+                    required: true,
+                    immutable: true,
                 },
-                idPub:{ //publisher
+                idRec:{ //publisher
                     type: String,
-                    required: true
+                    required: true,
+                    immutable: true,
                 },
                 name: { //name publisher
                     type: String,
@@ -35,6 +37,10 @@ const conversationSchema = new mongoose.Schema(
                 },
                 avatar: {
                     type: String,
+                },
+                idHouse: {
+                    type:String,
+                    required: true
                 }
             },
         }]
