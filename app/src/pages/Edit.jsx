@@ -62,7 +62,7 @@ export default function Edit(data) {
     ])
   }
 
-  const BASE_URL = 'http://192.168.0.243:5000/api'
+  const BASE_URL = 'https://backend-facilita.herokuapp.com/api'
   const userRequest = axios.create({
       baseURL: BASE_URL,
       headers: {token: `Bearer ${currentUser.accessTk}`}
@@ -182,20 +182,20 @@ export default function Edit(data) {
         <View style={styles.wrapper}>
         <SafeAreaView style={styles.container}>
             <TextInput
-            style={styles.input}
-            placeholder={house.name || 'null'}
-            placeholderTextColor="gray" 
-            onChangeText={(text) => setInputs({...inputs, name: text})}
+              style={styles.input}
+              placeholder={house.name}
+              placeholderTextColor="gray" 
+              onChangeText={(text) => setInputs({...inputs, name: text})}
             />
             <TextInput
             style={styles.input}
-            placeholder={house.desc.split(', ', 1)+'.' || 'null'}
+            placeholder={house.desc.split(', ', 1)+'.'}
             placeholderTextColor="gray" 
             onChangeText={(text) => setInputs({...inputs, desc: text})}
             />
             <TextInput
             style={styles.input}
-            placeholder={house.bairro || 'null'}
+            placeholder={house.bairro}
             placeholderTextColor="gray" 
             onChangeText={(text) => setInputs({...inputs, bairro: text})}
             />
@@ -237,18 +237,15 @@ export default function Edit(data) {
             <ScrollView 
               horizontal 
               showsHorizontalScrollIndicator={false} 
-              style={{paddingHorizontal: 15, 
-              marginTop: 35 }}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
             {images?.map((img, index) => (
-            <TouchableOpacity onLongPress={() =>  createTwoButtonAlert(index)}>
-              <View style={styles.slide}>
-                  <Image
-                  source={{uri: img}}
-                  style={{width: 90, height: 90, borderRadius: 8}}
-                  />
-              </View>
+            <TouchableOpacity style={styles.slide} key={index} onLongPress={() =>  createTwoButtonAlert(index)}>
+              <Image
+                key={index}
+                source={{uri: img}}
+                style={{width: 90, height: 90, borderRadius: 8}}
+              />
             </TouchableOpacity>
             ))}
             </ScrollView>
@@ -301,7 +298,7 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 10,
-        color:'#transparent',
+        color:'black',
         borderTopColor: 'transparent',
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',

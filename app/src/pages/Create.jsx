@@ -18,7 +18,7 @@ import {
 } from "react-native"
 import { useSelector } from 'react-redux'
 
-export default function Edit(data) {
+export default function Create() {
   const currentUser = useSelector((state)=> state.currentUser)
   const userId = currentUser ? currentUser._id : null
   const [refreshing, setRefreshing] = useState(false)
@@ -60,10 +60,10 @@ export default function Edit(data) {
 
   const pickImage = async () => {
     try {
-      let result = await ImagePicker.launchImageLibraryAsync({
+      let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [5, 6],
         quality: 1,
       });
       if (!result.cancelled) {
@@ -84,9 +84,9 @@ export default function Edit(data) {
     try {
       await ref.then((res) => {
         res.ref.getDownloadURL().then((url) => {
-        setImages(old => [...old, url])
-        setControl(true)          
-        history.navigate(0)
+          setImages(old => [...old, url])
+          setControl(true)          
+          history.navigate('create')
         })
       })
     } catch (error) {
@@ -94,7 +94,7 @@ export default function Edit(data) {
     }
     setChange(false)
     Alert.alert("Já pode selecionar a imagem seguinte!")
-    setImg([])
+    setImg(null)
   }
   
   const submitForm = async () => {
@@ -175,24 +175,25 @@ export default function Edit(data) {
               marginTop: 35 }}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
-            {images?.map((img, index) => (
-            <TouchableOpacity onLongPress={() =>  createTwoButtonAlert(index)}>
-              <View style={styles.slide}>
-                  <Image
-                  source={{uri: img}}
-                  style={{width: 90, height: 90, borderRadius: 8}}
-                  />
-              </View>
-            </TouchableOpacity>
-            ))}
+            {images.length > 0   
+            ? <View style={styles.slide}>
+                {images?.map((img, index) => (
+                <TouchableOpacity key={index} onLongPress={() => createTwoButtonAlert(index)}>
+                    <Image
+                      key={index}
+                      source={{uri: img}}
+                      style={{width: 90, height: 90, borderRadius: 8, marginRight: 10}}
+                    />
+                </TouchableOpacity>
+                ))}
+            </View>
+            : null}
             </ScrollView>
 
-
             <SafeAreaView style={styles.safeImageload}>
-
               <TouchableOpacity onPress={pickImage}> 
                   <Image 
-                  source={{uri: "https://cdn-icons-png.flaticon.com/128/126/126494.png"}}
+                  source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0vqDxBy86tHQMwT_a4waw7eCLIXoW6wH6LQ&usqp=CAU"}}
                   style={{width:40, height:40}}
                   />
               </TouchableOpacity>
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 10,
-        color:'#transparent',
+        color:'black',
         borderTopColor: 'transparent',
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
@@ -296,11 +297,11 @@ const styles = StyleSheet.create({
   slide:{
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
     backgroundColor: '#FFF',
     height: 90,
     height: 90,
     borderRadius: 8,
-    marginRight: 20,
   },
 });
   

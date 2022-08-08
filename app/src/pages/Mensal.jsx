@@ -54,10 +54,7 @@ export default function Mensal() {
 
 
  return (
-  <ScrollView 
-    showsVerticalScrollIndicator={false}
-    style={{backgroundColor: '#FFF' }}
-  >
+  <>
     <View style={styles.header}>
       <View style={styles.inputArea}>
         <Feather name="search" size={24} color="black" />
@@ -74,8 +71,7 @@ export default function Mensal() {
       <Text style={styles.title}>Alugue sem sair de casa</Text>
     </View>
 
-    <ScrollView scrollEnabled>
-      <View style={{flexGrow: 1, paddingHorizontal:10}}>
+      <View style={{flex: 1, paddingHorizontal:10}}>
         <FlatList 
           style={{overflow: 'hidden'}}
           data={filterlist}
@@ -86,8 +82,7 @@ export default function Mensal() {
           renderItem={({item}) => <DiariasComponent data={item} />}
         />
       </View>
-    </ScrollView>
-  </ScrollView>
+  </>
   );
 }
 
@@ -123,6 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title:{
+    marginBottom: 15,
     paddingHorizontal: 15,
     fontFamily: 'Montserrat_700Bold',
     fontSize: 18,

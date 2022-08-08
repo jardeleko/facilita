@@ -11,14 +11,10 @@ export default function Chat(data) {
 	const currentUser = useSelector((state) => state.currentUser)
 	const [messages, setMessages] = useState([])    
 	const [control, setControl] = useState(false) 
-	
-	console.log(idReceiver)
-	
+		
 	async function getIdRecAsync(result) {
-		console.log('teste')
 		await publicRequest.get(`/message/find/${result._id}`).then((res) => {
 			const data = res.data
-			console.log(data)						
 			if(data.user._id === currentUser._id) setIdRec(data.user.idRec)
 			else setIdRec(data.user._id) 
 		}).catch((err) => {

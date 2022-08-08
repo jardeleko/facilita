@@ -25,7 +25,7 @@ import axios from 'axios'
     const currentUser = useSelector((state) => state.currentUser)
     const navigation = useNavigation()
     
-    const BASE_URL = 'http://192.168.0.243:5000/api'
+    const BASE_URL = 'https://backend-facilita.herokuapp.com/api'
     const userRequest = axios.create({
         baseURL: BASE_URL,
         headers: {token: `Bearer ${currentUser.accessTk}`}
@@ -59,10 +59,7 @@ import axios from 'axios'
   
   
    return (
-    <ScrollView 
-      showsVerticalScrollIndicator={false}
-      style={{backgroundColor: '#FFF' }}
-    >
+    <>
       <View style={styles.header}>
         <View style={styles.inputArea}>
           <Feather name="search" size={24} color="black" />
@@ -79,58 +76,57 @@ import axios from 'axios'
         <Text style={styles.title}>Imóveis anunciados</Text>
       </View>
   
-      <ScrollView scrollEnabled>
-        <View style={{flexGrow: 1, paddingHorizontal:10}}>
-          <FlatList 
-            style={{overflow: 'visible'}}
-            data={tmplist}
-            nestedScrollEnabled={true}
-            keyExtractor={(item, index) => index.toString()}
-            vertical
-            showsVerticalScrollIndicator={false}
-            renderItem={({item}) => <DiariasComponent data={item} />}
-          />
-        </View>
-      </ScrollView>
-    </ScrollView>
-    );
-  }
+      <View style={{flex: 1, paddingHorizontal:10}}>
+        <FlatList 
+          style={{overflow: 'hidden'}}
+          data={tmplist}
+          nestedScrollEnabled={true}
+          keyExtractor={(item, index) => index.toString()}
+          vertical
+          showsVerticalScrollIndicator={false}
+          renderItem={({item}) => <DiariasComponent data={item} />}
+        />
+      </View>
+    </>
+  )}
   
 const styles = StyleSheet.create({
-    header:{
-        paddingHorizontal: 10,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        marginVertical: 20, 
-    },
-    inputArea:{
-        paddingHorizontal: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '98%',
-        backgroundColor:  '#FFF',
-        elevation: 2,
-        paddingHorizontal: 10,
-        height: 37,
-        borderRadius: 10,
-    },
-    input:{
-        fontFamily: 'Montserrat_500Medium',
-        paddingHorizontal: 10,
-        fontSize: 13,
-        width: '90%'
-    },
-    contentNew:{
-        flexDirection: 'row',
-        width: '100%',
-        alignItems: 'center'
-    },
-    title:{
-        paddingHorizontal: 15,
-        fontFamily: 'Montserrat_700Bold',
-        fontSize: 18,
-        color: '#4f4a4a'
-    }
-})
+  header:{
+    paddingHorizontal: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginVertical: 20, 
+  },
+  inputArea:{
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '98%',
+    backgroundColor:  '#FFF',
+    elevation: 2,
+    paddingHorizontal: 10,
+    height: 37,
+    borderRadius: 10,
+  },
+  input:{
+    fontFamily: 'Montserrat_500Medium',
+    paddingHorizontal: 10,
+    fontSize: 13,
+    width: '90%'
+  },
+  contentNew:{
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center'
+  },
+  title:{
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    fontFamily: 'Montserrat_700Bold',
+    fontSize: 18,
+    color: '#4f4a4a',
+    
+  }
+});

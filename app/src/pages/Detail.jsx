@@ -14,6 +14,7 @@ export default function Detail(id) {
   const [images, setImages] = useState([])
   const [isPublisher, setPublisher] = useState(false)
   const navigation = useNavigation()
+
   useEffect(() => {
     const getHouse = async () => {
       await publicRequest.get(`/house/find/${newGet}`).then((house) => {
@@ -37,8 +38,9 @@ export default function Detail(id) {
       style={{backgroundColor: '#FFF' }}
     >
     <View style={styles.container}>
+
       <View style={styles.swiperContent}>
-          <SwiperComponent images={images} offer={offer}/>
+        <SwiperComponent images={images}/>
       </View>
 
       <View style={styles.headerContent}>
@@ -76,9 +78,10 @@ export default function Detail(id) {
       </Text>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{paddingHorizontal: 15, marginTop: 35 }}>
-        {house.imgs?.map((img) => (
-          <View style={styles.slide}>
+        {house.imgs?.map((img, index) => (
+          <View key={index} style={styles.slide}>
             <Image
+              key={index}
               source={{uri: img}}
               style={{width: 90, height: 90, borderRadius: 8}}
             />

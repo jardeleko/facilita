@@ -54,10 +54,7 @@ export default function Diarias() {
 
 
  return (
-  <ScrollView vertical={true}
-    showsVerticalScrollIndicator={false}
-    style={{backgroundColor: '#FFF' }}
-  >
+  <>
     <View style={styles.header}>
       <View style={styles.inputArea}>
         <Feather name="search" size={24} color="black" />
@@ -74,19 +71,18 @@ export default function Diarias() {
       <Text style={styles.title}>Imóveis de temporada</Text>
     </View>
 
-    <View style={{flexGrow: 1, paddingHorizontal:10}}>
+    <View style={{flex: 1, paddingHorizontal:10}}>
       <FlatList 
         nestedScrollEnabled={true}
-        style={{overflow: 'visible'}}
+        style={{overflow: 'hidden'}}
         data={tmplist}
         keyExtractor={(item, index) => index.toString()}
         vertical
- 
+        showsVerticalScrollIndicator={false}
         renderItem={({item}) => <DiariasComponent data={item} />}
       />
     </View>
-
-  </ScrollView>
+  </>
   );
 }
 
@@ -122,9 +118,10 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title:{
+    marginBottom: 15,
     paddingHorizontal: 15,
     fontFamily: 'Montserrat_700Bold',
     fontSize: 18,
     color: '#4f4a4a'
   }
-})
+});

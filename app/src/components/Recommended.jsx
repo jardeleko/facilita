@@ -8,9 +8,9 @@ export default function Recommended({data}) {
   return (
   <TouchableOpacity onPress={() => history.navigate('detail', {id: data._id})}>
     <ImageBackground
-    source={{uri: data.imgs[1]}}
-    style={styles.container}
-    blurRadius={10}
+      source={{uri: data.imgs[1]}}
+      style={styles.container}
+      blurRadius={10}
     >
       <Text style={[styles.house, styles.shadow]}>
         {data.name}

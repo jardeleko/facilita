@@ -7,39 +7,37 @@ import { useNavigation } from '@react-navigation/native'
 export default function New({data}) {
   const history = useNavigation()
   return ( 
-    <View  style={styles.container} >
-      <Image
-        source={{uri: data.imgs[0]}}
-        style={styles.cover}
-      />
-      <View style={styles.content}>
-        <View style={styles.dot}>
-        </View>
-        <Text style={styles.title}>{data.name}</Text>
-      </View>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        style={{backgroundColor: '#fff' }}
-      >
-        <Text style={styles.description}>
-          {data.desc}
-        </Text>
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <View style={{width: '80%'}}>
-          <Text style={styles.price}>R$ {data.offer > 0 ? ((parseFloat(data.price) - (parseFloat(data.price)*(data.offer/100))).toFixed(2)).replace('.', ',') : data.price}</Text>
-        </View>
-        <TouchableOpacity onPress={() => history.navigate('detail', {id: data._id})}>
-          <View style={{width: '100%', marginLeft:10}}>
-            <Ionicons name="ios-add-circle" size={24} color="#23bde8" />
+    <TouchableOpacity onPress={() => history.navigate('detail', {id: data._id})}>
+      <View  style={styles.container} >
+        <Image
+          source={{uri: data.imgs[0]}}
+          style={styles.cover}
+        />
+        <View style={styles.content}>
+          <View style={styles.dot}>
           </View>
-        </TouchableOpacity>
+          <Text style={styles.title}>{data.name}</Text>
+        </View>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          style={{backgroundColor: '#fff' }}
+        >
+          <Text style={styles.description}>
+            {data.desc}
+          </Text>
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <View style={{width: '80%'}}>
+            <Text style={styles.price}>R$ {data.offer > 0 ? ((parseFloat(data.price) - (parseFloat(data.price)*(data.offer/100))).toFixed(2)).replace('.', ',') : data.price}</Text>
+          </View>
+            <View style={{width: '100%', marginLeft:10}}>
+              <Ionicons name="ios-add-circle" size={24} color="#23bde8" />
+            </View>
+        </View>
       </View>
-    </View>
-    
-  );
-}
+    </TouchableOpacity>
+  )}
 
 const styles = StyleSheet.create({
   container:{

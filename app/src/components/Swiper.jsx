@@ -1,13 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, StyleSheet, Image} from 'react-native'
 import Swiper from 'react-native-swiper'
 
-export default function SwiperComponent({images}) {
-  let count = 0
-  images?.forEach(element => {
-    count++
-  })
-  
+export default function SwiperComponent({images}) {  
   return (
     <Swiper
       style={styles.wrapper}
@@ -19,7 +14,7 @@ export default function SwiperComponent({images}) {
         height: 10,
         borderRadius: 10,
       }}
-      key={count}
+      key={images}
       activeDotColor="#FFF"
       activeDotStyle={{
         borderColor: '#000',
@@ -29,9 +24,10 @@ export default function SwiperComponent({images}) {
         borderRadius: 10,
       }}
     >
-    {images?.map((img) => (
-      <View style={styles.slide}>
+    {images?.map((img, index) => (
+      <View key={index} style={styles.slide}>
         <Image
+          key={index}
           source={{uri: img}}
           style={styles.imageContainer}
         />
