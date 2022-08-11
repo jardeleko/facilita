@@ -28,8 +28,9 @@ export default function CustomNavigationBar({navigation, back}) {
                         <Menu.Item onPress={() => {navigation.navigate('create'), setVisible(false)}} icon="briefcase-plus-outline" title="Anunciar"/>
                         <Menu.Item onPress={() => {navigation.navigate('diarias'), setVisible(false)}} icon="calendar-clock-outline" title="Diárias"/>
                         <Menu.Item onPress={() => {navigation.navigate('mensal'), setVisible(false)}} icon="home-city-outline" title="Mensal"/>
-                        <Menu.Item onPress={() => {navigation.navigate('posts'), setVisible(false)}} icon="paperclip" title="Seus Anuncios"/>
                         <Menu.Item onPress={() => {navigation.navigate('list'), setVisible(false)}} icon="message-outline" title="Mensagens"/>
+                        <Menu.Item onPress={() => {navigation.navigate('posts'), setVisible(false)}} icon="paperclip" title="Seus Anuncios"/>
+                        <Menu.Item onPress={() => {navigation.navigate('user'), setVisible(false)}} icon="account" title="Dados pessoais"/>
                         <Menu.Item onPress={() => {dispatch(logOut()), setVisible(false)}} icon="account-arrow-right-outline" title="Sair"/>
                 </Menu>
             ) : null}

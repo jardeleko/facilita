@@ -8,18 +8,21 @@ const userSchema = new mongoose.Schema(
         },
         user: {
             type: String, 
-            required: true,
         },
         email: {
             type: String, 
-            required: true
+            required: true,
+            unique: true
+        },
+        avatar: {
+            type: String,
+            default: 'https://www.ecp.org.br/wp-content/uploads/2017/12/default-avatar.png'
         },
         age: {
             type: Number,
         },
         passwd: {
             type:String,
-            required: true
         },
         city: {
             type:String,

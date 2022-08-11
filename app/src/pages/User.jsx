@@ -21,15 +21,12 @@ import {
 } from "react-native"
 import { useSelector } from 'react-redux'
 
-export default function Edit(data) {
-  const house = data.route.params.data
+export default function User() {
   const currentUser = useSelector((state)=> state.currentUser)
-  const userId = currentUser ? currentUser._id : null
   const [refreshing, setRefreshing] = useState(false)
   const [temp, setSelectedValue] = useState(false)
   const [uploading, setChange] = useState(false)
   const [img, setImg] = useState(null)
-  const [images, setImages] = useState(house.imgs)
   const [inputs, setInputs] = useState({})
   const history = useNavigation()
   const [control, setControl] = useState(false)
@@ -141,7 +138,7 @@ export default function Edit(data) {
 
     console.log(body)
 
-    await userRequest.put(`/house/${house._id}`, body).then((res) => {
+    await userRequest.put(`/user/${currentUser._id}`, body).then((res) => {
         // console.log(res.data)
         alert('Os dados foram enviados!')
         history.navigate('home')
@@ -160,17 +157,17 @@ export default function Edit(data) {
           style: "cancel"
         },
         { 
-          text: "OK", onPress: async () => {
-            await publicRequest.delete(`/house/${house._id}`).then((res) => {
-              console.log(res.data)
-              onRefresh()
-              history.navigate('home')
-            }).catch((err) => {
-              console.log(err)
-            })     
-          }
+        text: "OK", onPress: async () => {
+          await publicRequest.delete(`/user/${currentUser._id}`).then((res) => {
+            console.log(res.data)
+            onRefresh()
+            history.navigate('home')
+          }).catch((err) => {
+            console.log(err)
+          })     
         }
-      ])
+      }
+    ])
   }
 
   return (
@@ -178,32 +175,32 @@ export default function Edit(data) {
         showsVerticalScrollIndicator={false}
         style={{backgroundColor: '#FFF' }}
     >
-    <Text style={{fontSize:14, fontFamily:'Montserrat_500Medium', textAlign: 'center', marginTop: 14}}>Atualize seu Anuncio</Text>
+    <Text style={{fontSize:14, fontFamily:'Montserrat_500Medium', textAlign: 'center', marginTop: 14}}>Atualize seu perfil</Text>
         <View style={styles.wrapper}>
         <SafeAreaView style={styles.container}>
             <TextInput
               style={styles.input}
-              placeholder={house.name}
+              placeholder={"Nome: " + currentUser.name}
               placeholderTextColor="gray" 
               onChangeText={(text) => setInputs({...inputs, name: text})}
             />
             <TextInput
             style={styles.input}
-            placeholder={house.desc.split(', ', 1)+'.'}
+            placeholder={"Username: " + currentUser.user}
             placeholderTextColor="gray" 
             onChangeText={(text) => setInputs({...inputs, desc: text})}
             />
             <TextInput
             style={styles.input}
-            placeholder={house.bairro}
+            placeholder={"Email: "+currentUser.email}
             placeholderTextColor="gray" 
             onChangeText={(text) => setInputs({...inputs, bairro: text})}
             />
             <TextInput
-            style={styles.input}
-            onChangeText={(text) => setInputs({...inputs, price: text})}
-            placeholder={house.price}
-            placeholderTextColor="gray" 
+              style={styles.input}
+              onChangeText={(text) => setInputs({...inputs, price: text})}
+              placeholder={"Cidade: " +currentUser.city}
+              placeholderTextColor="gray" 
             />
             <View style={styles.boxSelection}>
               <Picker
@@ -211,17 +208,17 @@ export default function Edit(data) {
                 style={{ height: 50, width: 150, color:'gray'}}
                 onValueChange={(itemValue) => setSelectedValue(itemValue)}
               >
-                <Picker.Item label="Tipo" selectedValue/>
-                <Picker.Item label="Dia" value={true} />
-                <Picker.Item label="Mes" value={false} />
+                <Picker.Item label="UF" selectedValue/>
+                <Picker.Item label="SC" value={true} />
+                <Picker.Item label="RS" value={false} />
               </Picker>
              
-              <Text style={styles.editText}>Desconto(%): </Text>
+              <Text style={styles.editText}>Idade: </Text>
               <TextInput
                 style={styles.miniBox}
                 keyboardType="number-pad"
                 onChangeText={(text) => setInputs({...inputs, offer: parseInt(text)})}
-                placeholder="0 <> 100"
+                placeholder={currentUser.age || 'null'}
                 placeholderTextColor="gray" 
               />
             </View>   
@@ -239,15 +236,12 @@ export default function Edit(data) {
               showsHorizontalScrollIndicator={false} 
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
-            {images?.map((img, index) => (
-            <TouchableOpacity style={styles.slide} key={index} onLongPress={() =>  createTwoButtonAlert(index)}>
+            <TouchableOpacity style={styles.slide} onLongPress={() =>  createTwoButtonAlert(currentUser._id)}>
               <Image
-                key={index}
-                source={{uri: img}}
+                source={{uri: currentUser.avatar}}
                 style={{width: 90, height: 90, borderRadius: 8}}
               />
             </TouchableOpacity>
-            ))}
             </ScrollView>
 
 
@@ -261,7 +255,7 @@ export default function Edit(data) {
               </TouchableOpacity>
               
               <View style={styles.imageContainer}> 
-                  {img && <Image source={{uri: img.uri}} style={styles.positionImg}/>}
+                  {img && <Image source={{uri: currentUser.avatar}} style={styles.positionImg}/>}
               </View>
 
               <TouchableOpacity style={styles.sendBtn} onPress={uploadImage}> 

@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
+import { Alert } from 'react-native'
 
 const userSlice = createSlice({
     name:"user",
@@ -10,15 +11,18 @@ const userSlice = createSlice({
     reducers:{
         loginStart:(state) => {
             state.isFetching=true
+            state.error=false
         },
         loginSuccess:(state, action) => {
             state.isFetching = false
+            state.error = false
             state.currentUser = action.payload
+            Alert.alert('Olá, ' + state.currentUser.name)
         },
         loginFailure:(state) => {
             state.isFetchcing = false
-            state.error = true
-            window.location.reload(true);        
+            state.error = true        
+            Alert.alert('Usuário não encontrado!')
         },
         logOut: (state, action) => {
             state.currentUser = null
