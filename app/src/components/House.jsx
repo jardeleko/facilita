@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
   cover:{
     borderRadius: 10,
     width: 60,
-    height: 60
+    height: 60,
+    resizeMode: 'cover',
   },
   content:{
     width: '65%',

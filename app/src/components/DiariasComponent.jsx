@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     width: "96%",
     height: 160,
+    resizeMode: 'cover',
     borderRadius: 4,
   },
   content:{

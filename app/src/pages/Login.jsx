@@ -27,11 +27,14 @@ export default function Login() {
 	const [passwd, setPasswd] = useState(null)
 	const [accessTk, setAccessTk] = useState(null)
 	const [userInfo, setUserInfo] = useState(null)
+	const [uploading, setChange] = useState(false)
+
 	const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
 		expoClientId: '347880960520-sje8ods0rcbl5v6lpadu6pmsjo1p9280.apps.googleusercontent.com',
 		androidClientId: '347880960520-of68n10pgllkm6nn61ppnb5v351ik7lu.apps.googleusercontent.com',
 		iosClientId: '347880960520-9fjc5ff6vqgrc3li9k3jdvllma8opme0.apps.googleusercontent.com'
 	})
+
 	if(userInfo !== null) {
 		const newUser = {name: userInfo.name, email: userInfo.email, avatar:userInfo.picture, accessTk}
 		const createNewUser = async () => {
@@ -63,9 +66,6 @@ export default function Login() {
 		else if(passwd === null) Alert.alert('Necessário incluir senha cadastrada!')
 		else login(dispatch, {user, passwd})
 	}
-	const createRequest = () => {
-		navigation.navigate('register')
-	}
 
 	return (
 	<View style={styles.container}>
@@ -81,7 +81,7 @@ export default function Login() {
 					<TextInput 
 						style={styles.input}
 						onChangeText={setUser}
-						placeholder="Digite seu user"
+						placeholder="Username ou email"
 						placeholderTextColor="gray" 
 					/>
 				</View>
@@ -103,18 +103,32 @@ export default function Login() {
 
 				<View style={{flexDirection:'row', textAlign:'justify'}}>
 					<Text style={{marginTop:20, color:'white'}}>Ou Cadastre-se agora, </Text>
-					<TouchableOpacity onPress={createRequest}>
+					<TouchableOpacity onPress={() => navigation.navigate('register')}>
 						<Text style={{marginTop:20, color:'#ff8936'}}>clique aqui!</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={{flexDirection:'row', textAlign:'justify'}}>
+					<TouchableOpacity onPress={() => navigation.navigate('forgot')}>
+						<Text style={{marginTop:20, color:'#ff8936'}}>Esqueceu sua senha?</Text>
 					</TouchableOpacity>
 				</View>
 
 			</View>	
-			<TouchableOpacity style={{alignItems:'center', justifyContent:'center'}} onPress={() => promptAsync()}> 
-				<Image 
-					resizeMode='center'
-					style={{width:130, height:40, borderRadius: 4}}
-					source={require('../../assets/signGoogle.jpg')}
-				/>
+			<TouchableOpacity style={{alignItems:'center', justifyContent:'center'}} onPress={() => {promptAsync(), setChange(true)}}> 
+				{	uploading 
+				?
+					<Image 
+						resizeMode='center'
+						style={{width:100, height:100, borderRadius: 4}}
+						source={require('../../assets/loader.gif')}
+					/>
+				:
+					<Image 
+						resizeMode='center'
+						style={{width:130, height:40, borderRadius: 4}}
+						source={require('../../assets/signGoogle.jpg')}
+					/>
+				}
 			</TouchableOpacity>
 
 		</ImageBackground>

@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema(
         city: {
             type:String,
         },
+        passwdToken: {
+            type: String,
+        },
+        expireToken: {
+            type: Date,
+        },
     }, 
     {timestamps:true}
 )

@@ -26,6 +26,7 @@ export default function Recommended({data}) {
 
 const styles = StyleSheet.create({
   container:{
+    resizeMode: 'cover',
     height: 130,
     width: 230,
     marginRight: 20,

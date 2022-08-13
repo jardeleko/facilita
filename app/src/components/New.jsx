@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     width: 170,
     height: 110,
     borderRadius: 10,
+    resizeMode: 'cover',
   },
   content:{
    flexDirection: 'row',
