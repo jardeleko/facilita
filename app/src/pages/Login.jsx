@@ -39,7 +39,12 @@ export default function Login() {
 		const newUser = {name: userInfo.name, email: userInfo.email, avatar:userInfo.picture, accessTk}
 		const createNewUser = async () => {
 			await publicRequest.post('/register', newUser).then((res) => {
-				login(dispatch, res.data) 
+				
+				const result = res.data
+				const credentials = {email: result.email, accessTk}
+				setTimeout(() => {
+					login(dispatch, credentials) 
+				}, 3000)
 			}).catch(() =>{
 				login(dispatch, newUser)
 			})

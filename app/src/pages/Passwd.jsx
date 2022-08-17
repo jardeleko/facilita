@@ -15,12 +15,17 @@ import {
 export default function Passwd() {
   const [inputs, setInputs] = useState({})
   const [control, setControl] = useState(false)
+  const [expired, setExpired] = useState(null)
   const [response, setResponse] = useState(null)
   const history = useNavigation()
-    
+  const compare = Date.now()
+  console.log(compare)
+
   const submitForm = async () => {
     await publicRequest.post('/forgot', inputs).then((res) => {
-      setResponse(res.data)
+      const result = res.data
+      setResponse(result.token)
+      setExpired(result.expired)
       Alert.alert("Email encaminhado, verifique também sua caixa de spam..")
       setControl(true)
     }).catch((err) => {
@@ -30,17 +35,21 @@ export default function Passwd() {
   }
 
   const verifyToken = async () => {
-    if(String(inputs.code) == String(response)){
-      await publicRequest.post('/user/find/email', inputs).then((res) => {
-        console.log(res.data)
-        const id = res.data
-        history.navigate('verify', {id})
-      }).catch((err) => {
-        console.log(err)
-      })
-    } 
-    else{
-      Alert.alert('O token fornecido não corresponde.')
+    if(compare < expired){
+      if(String(inputs.code) == String(response)){
+        await publicRequest.post('/user/find/email', inputs).then((res) => {
+          console.log(res.data)
+          const id = res.data
+          history.navigate('verify', {id})
+        }).catch((err) => {
+          console.log(err)
+        })
+      } 
+      else{
+        Alert.alert('O token fornecido não corresponde.')
+      }
+    } else{
+      Alert.alert('Seu token expirou, clique em reenviar email e tente novamente.')
     }
   }
 
@@ -65,7 +74,7 @@ export default function Passwd() {
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => setControl(false)} style={styles.buttonBG}>
-            <Text>Reenviar email</Text>
+            <Text style={{color: 'black'}}>Reenviar email</Text>
           </TouchableOpacity>
         </SafeAreaView>
       </View>

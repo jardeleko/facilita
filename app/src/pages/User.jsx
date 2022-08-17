@@ -19,6 +19,8 @@ import React, { useCallback, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Feather } from '@expo/vector-icons'
 import ImageZoom from 'react-native-image-pan-zoom'
+import { useDispatch } from 'react-redux'
+import { logOut } from '../redux/userRedux'
 
 export default function User() {
   const currentUser = useSelector((state) => state.currentUser)
@@ -31,7 +33,8 @@ export default function User() {
   const [inputs, setInputs] = useState({})
   const history = useNavigation()
   const [control, setControl] = useState(false)
-
+  const dispatch = useDispatch()
+  
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -88,6 +91,9 @@ export default function User() {
 
       body = { avatar: newUP, ...inputs }
     }
+    else if(control){
+      body = { avatar: newUP, ...inputs }
+    }
     else if(temp){
       inputs.city = inputs.city.concat(', ').concat(temp)
       body = {...inputs }
@@ -95,31 +101,28 @@ export default function User() {
     else {
       body = { ...inputs }
     }
-    console.log(body)
     await publicRequest.put(`/user/${id}`, body).then((res) => {
-      console.log(res.data)
-      alert('Os dados foram enviados!')
+      alert('Seus dados foram alterados com sucesso.')
       history.navigate('home')
     }).catch((err) => {
       console.log(err)
     })
   }
-  const removePost = () => {
+  const deleteAccount = (id) => {
     Alert.alert(
-      "Tem certeza que deseja apagar seu anuncio?",
-      "Clique em ok para apagar...",
+      "Tem certeza que deseja deletar sua conta?",
+      "Seus dados serão mantidos por até 30 dias, sentiremos sua falta!",
     [
       {
         text: "Cancelar",
         onPress: () => console.log("Cancel Pressed"),
         style: "cancel"
       },
-      {
-        text: "OK", onPress: async () => {
-          await publicRequest.delete(`/user/${currentUser._id}`).then((res) => {
-            console.log(res.data)
-            onRefresh()
-            history.navigate('home')
+      { //delete account user
+        text: "Apagar", onPress: async () => {
+          await publicRequest.delete(`/user/${id}`).then((res) => {
+            dispatch(logOut())
+            Alert.alert('Sua conta foi excluída!')
           }).catch((err) => {
             console.log(err)
           })
@@ -128,12 +131,14 @@ export default function User() {
     ])
   }
 
-  return (
+  return (<>
+    {currentUser ?
+      
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={{ backgroundColor: '#FFF', flex: 1 }}
     >
-      {pressed
+      {pressed 
         ?
         <View style={{flex: 1 }}>
           <TouchableOpacity onPress={() => setPressed(!pressed)}>
@@ -220,6 +225,7 @@ export default function User() {
 
               </ScrollView>
               <SafeAreaView style={styles.safeImageload}>
+
                 <TouchableOpacity onPress={pickImage}>
                   <Image
                     source={{ uri: "https://cdn-icons-png.flaticon.com/128/126/126494.png" }}
@@ -235,8 +241,8 @@ export default function User() {
                   <Text style={styles.buttonText}>Upload</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={removePost}>
-                  <Feather name="trash-2" size={36} color="red" />
+                <TouchableOpacity onPress={() => deleteAccount(currentUser._id)}>
+                  <Feather name="trash-2" size={36} color="gray" />
                 </TouchableOpacity>
 
               </SafeAreaView>
@@ -250,6 +256,8 @@ export default function User() {
         </>
       }
     </ScrollView>
+    : null}
+  </>
   )
 }
 

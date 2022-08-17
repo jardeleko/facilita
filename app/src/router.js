@@ -42,7 +42,7 @@ function Routes(){
       <Stack.Screen name="chat" component={Chat} />                       
       <Stack.Screen name="edit" component={Edit} />       
       <Stack.Screen name="list" component={List} />       
-      <Stack.Screen name="user" component={User} />       
+      <Stack.Screen name="user" component={User} />    
     </Stack.Navigator>
     </NavigationContainer>
     :

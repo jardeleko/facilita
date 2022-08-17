@@ -19,19 +19,20 @@ router.post('/forgot', async (req, res) => {
     if(!user){
       res.status(422).json('user not exists!')
     }
+    const expired = Date.now() + (3600000/2)
     const aux = Math.floor(Math.random() * 65536)
     if(aux.length < 1234) aux = Math.floor(Math.random() * 65536)
     user.passwdToken = String(aux)
-    user.expireToken = Date.now()+ 3600000
+    user.expireToken = expired
     user.save().then((result) =>{
       console.log(result)
       transport.sendMail({
         to:user.email,
         from: "no-replay@facilitaimoveis.com.br",
         subject: "Redifinição de Senha, Facilita Imóveis",
-        html: "<p><h3>Olá, "+user.name+".<h3><p> <br><br> <p><h5>Vimos que você solicitou a recuperação de senha<h5></p>. <p>Para continuar, insira o código <strong>" + aux + "</strong>  na página de verificação indicada no seu aplicativo..</p>",
+        html: "<p><h3>Olá, "+user.name+".<h3></p> <br><br> <p>Vimos que você solicitou a recuperação de senha.</p> <p>Para continuar, insira o código <strong>" + aux + "</strong>  na página de verificação iniciada no seu aplicativo..</p>",
       })
-      res.status(200).json(aux)
+      res.status(200).json({token:aux, expired})
     }).then((err) =>{
       res.status(500).json(err)
     })
@@ -62,7 +63,8 @@ router.post("/register", async (req, res) => {
     res.status(201).json(savedUser)
   }).catch((err) => {
     res.status(500).json(err)
-    console.log("Problem on saved" + err)
+    console.log("Problem on saved " + err)
+    return
   })
 })
 
@@ -78,6 +80,7 @@ router.post("/login", async (req, res) => {
         {expiresIn:'365d'}
       )
       const {...others} = user._doc
+      console.log(others)
       res.status(200).json({...others, accessTk: newAccessTk})
     }
   } else {

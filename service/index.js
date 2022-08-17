@@ -22,25 +22,25 @@ app.use('/api/user', userRouter)
 app.use('/api/message', messageRouter)
 app.use('/api/converse', converseRouter)
 
-io.on('connection', (socket) => {
-    socket.on('chat message', msg => {
-        io.emit('chat message', msg)
-    })
-    console.log('a user connected')
-});
+io.on('connection', socket => {
+	console.log('a user connected')
+	socket.on('getmessage', message => {
+		console.log(message)
+	})
+})
 
 
 mongoose.connect(process.env.MONGO_URI).then(() => 
-    console.log("DB connect successfull")
-).catch((err) => {
-    console.log("Error Connection, exception:", err)
+		console.log("DB connect successfull") )
+	.catch((err) => {
+		console.log("Error Connection, exception:", err)
 })
 
 app.listen(process.env.PORT || '5000', () => {
-    try{
-        console.log('listen in', process.env.PORT) 
-    }
-    catch{
-        console.log('http problem')
-    }
+	try{
+		console.log('listen in', process.env.PORT) 
+	}
+	catch{
+		console.log('http problem')
+	}
 })
