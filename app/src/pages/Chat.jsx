@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import { useSelector } from 'react-redux'
 import publicRequest from '../requestMethods'
-import { io } from 'socket.io-client'
 
 export default function Chat(data) {
 	const [conversation, setConversation] = useState(data.route.params.conversation ? data.route.params.conversation : null)
@@ -12,10 +11,10 @@ export default function Chat(data) {
 	const currentUser = useSelector((state) => state.currentUser)
 	const [messages, setMessages] = useState([])    
 	const [control, setControl] = useState(false) 
-		
+	
 	async function getIdRecAsync(result) {
 		await publicRequest.get(`/message/find/${result._id}`).then((res) => {
-			const data = res.data
+			const data = res.datar
 			if(data.user._id === currentUser._id) setIdRec(data.user.idRec)
 			else setIdRec(data.user._id) 
 		}).catch((err) => {
@@ -24,14 +23,7 @@ export default function Chat(data) {
 	} 
 	
 	useEffect(() => {
-		if(conversation === null){
-			const socket = io('http://10.0.0.103:5000', {
-
-			})
-			socket.on("ping", ({messages}) => {
-				console.log('teste iniciado!')
-			})
-	
+		if(conversation === null){	
 			const getData = async () => {
 				await publicRequest.get(`/converse/findbyus/${currentUser._id}`).then((res) => {
 					const filters = res.data.map((item) => item.messages)
@@ -102,12 +94,7 @@ export default function Chat(data) {
 			setControl(true)
 		}
 	}
-	// const onSend = async (message = []) => {
-	// 	const newMessages = await GiftedChat.append(messages, message) 
-	// 	socket.on('chat message', newMessages => { 
-	// 		setMessages(newMessages) }); 
-	// 		socket.emit('chat message', newMessages); 
-	// }
+
 	const onSend = useCallback((messages = []) => {
 		setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
 		asyncSubmitMessage(messages[0])

@@ -12,7 +12,7 @@ router.get("/findbyus/:id", async (req, res) => { //user if receive message
         const filters = converse.map((item) => item.messages)
         
         for(let i = 0; i < filters.length; i++){  
-            console.log(filters[i][0].user._id)
+            // console.log(filters[i][0].user._id)
             if(filters[i][0].user.idRec === req.params.id || filters[i][0].user._id === req.params.id) {
                 aux.push(i) 
             }
@@ -38,7 +38,6 @@ router.get("/find/:id", async (req, res) => {
 
 //create new converse
 router.post('/', async (req, res) => {
-    console.log(req.body)
     const newConverse = new Converse(req.body)
     try {
         const savedConverse = await newConverse.save()
